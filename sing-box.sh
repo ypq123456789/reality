@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# 预设所有交互选项
+# 预设所有交互选项（再次修正）
 AUTO_ENTER=""
 AUTO_A="a"
-AUTO_N="n"
-AUTO_Y="y"
+AUTO_N="n"  # 不使用Shadowsocks
+AUTO_Y="y"  # 使用Vless+TCP，因为不使用Shadowsocks时必须选一个
 AUTO_PORT="12345"
 AUTO_ENTER2=""
 AUTO_NETWORK="1"  # 1表示TCP
@@ -243,8 +243,8 @@ EOF
 
 vless_tcp_inbound() {
     # 使用预设的端口
-    echo "输入监听端口(0~65535):${AUTO_ENTER5}"
-    Port="${AUTO_ENTER5}"
+    echo "输入监听端口(0~65535):${AUTO_PORT}"
+    Port="${AUTO_PORT}"
     [ -z ${Port} ] && Port=1443
     
     # 自动生成UUID
@@ -282,8 +282,8 @@ EOF
 
 ss_inbound() {
     # 使用预设的端口
-    echo "输入监听端口(0~65535):${AUTO_ENTER5}"
-    Port="${AUTO_ENTER5}"
+    echo "输入监听端口(0~65535):${AUTO_PORT}"
+    Port="${AUTO_PORT}"
     [ -z ${Port} ] && Port=2443
     
     # 自动生成密码
@@ -318,12 +318,12 @@ EOF
 
 ss_vless_inbound() {
     # 使用预设选项
-    echo "使用Shadowsocks? (y/N) ${AUTO_Y}"
-    useSS="${AUTO_Y}"
+    echo "使用Shadowsocks? (y/N) ${AUTO_N}"
+    useSS="${AUTO_N}"
     [[ ${useSS} =~ ^[yY]$ ]] && ss_inbound
     
-    echo "使用Vless+TCP？(y/N) ${AUTO_N}"
-    useVlessTCP="${AUTO_N}"
+    echo "使用Vless+TCP？(y/N) ${AUTO_Y}"
+    useVlessTCP="${AUTO_Y}"
     if [[ ${useSS} =~ ^[yY]$ && ${useVlessTCP} =~ ^[yY]$ ]];then
         echo "," >> config.json
     fi
